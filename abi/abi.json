@@ -4,11 +4,6 @@
         "type": "constructor",
         "inputs": [
           {
-            "name": "_semaphore",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
             "name": "_priceOracle",
             "type": "address",
             "internalType": "address"
@@ -125,13 +120,7 @@
       {
         "type": "function",
         "name": "depositCollateral",
-        "inputs": [
-          {
-            "name": "identityCommitment",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ],
+        "inputs": [],
         "outputs": [],
         "stateMutability": "payable"
       },
@@ -164,28 +153,7 @@
       {
         "type": "function",
         "name": "mint",
-        "inputs": [
-          {
-            "name": "merkleTreeDepth",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "merkleTreeRoot",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "nullifier",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "points",
-            "type": "uint256[8]",
-            "internalType": "uint256[8]"
-          }
-        ],
+        "inputs": [],
         "outputs": [],
         "stateMutability": "nonpayable"
       },
@@ -230,19 +198,6 @@
             "name": "",
             "type": "bool",
             "internalType": "bool"
-          }
-        ],
-        "stateMutability": "view"
-      },
-      {
-        "type": "function",
-        "name": "semaphore",
-        "inputs": [],
-        "outputs": [
-          {
-            "name": "",
-            "type": "address",
-            "internalType": "contract ISemaphore"
           }
         ],
         "stateMutability": "view"

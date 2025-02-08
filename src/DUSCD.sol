@@ -2,7 +2,6 @@
 pragma solidity ^0.8.26;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@semaphore-protocol/contracts/interfaces/ISemaphore.sol";
 
 interface IStdReference {
     /// A structure returned whenever someone requests for standard reference data.
@@ -16,47 +15,29 @@ interface IStdReference {
     function getReferenceData(string memory _base, string memory _quote) external view returns (ReferenceData memory);
 }
 
-contract DUSC is ERC20 {
-    ISemaphore public semaphore;
+contract DUSCD is ERC20 {
     IStdReference public priceOracle;
     uint256 public groupId;
     uint256 public constant MIN_COLLATERAL_RATIO = 0.75e18; // 0.75%
     uint256 public constant MAX_VALUE = 1e18; // Maximum value of collateral
     mapping(bytes32 => bool) public proofUsed;
 
-    constructor(address _semaphore, address _priceOracle) ERC20("Decentralized Untraceable Stablecoin", "DUSC") {
-        semaphore = ISemaphore(_semaphore);
+    constructor( address _priceOracle) ERC20("Decentralized Untraceable Stablecoin Dummy", "DUSCD") {
         priceOracle = IStdReference(_priceOracle);
-        groupId = semaphore.createGroup(address(this));
     }
 
-    function depositCollateral(uint256 identityCommitment) external payable {
+    function depositCollateral() external payable {
         require(msg.value == MAX_VALUE, "Collateral amount should be 1");
-        semaphore.addMember(groupId, identityCommitment);
     }
 
-    function mint(uint256 merkleTreeDepth, uint256 merkleTreeRoot, uint256 nullifier, uint256[8] calldata points)
+    function mint()
         external
     {
         uint256 collateralValue = MAX_VALUE * getCollateralPrice() / 1e18;
         uint256 amount = (collateralValue * MIN_COLLATERAL_RATIO) / 1e18;
 
-        ISemaphore.SemaphoreProof memory proof =
-            ISemaphore.SemaphoreProof(merkleTreeDepth, merkleTreeRoot, nullifier, 0, groupId, points);
-
-        bytes32 proofHash = keccak256(
-            abi.encodePacked(
-                proof.merkleTreeDepth, proof.merkleTreeRoot, proof.nullifier, proof.message, proof.scope, proof.points
-            )
-        );
-
-        require(!proofUsed[proofHash], "Proof already used");
-
-        semaphore.validateProof(groupId, proof);
-
         _mint(msg.sender, amount);
 
-        proofUsed[proofHash] = true;
     }
 
     function getCollateralPrice() public view returns (uint256) {
